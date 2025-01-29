@@ -1,5 +1,3 @@
-# Sparky — Token metrics visualization 📊
-
 ---
 title: Sparky
 emoji: 📈
