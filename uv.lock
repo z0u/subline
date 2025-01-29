@@ -991,7 +991,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "gradio", marker = "extra == 'space'", specifier = ">=4.13.0" },
+    { name = "gradio", marker = "extra == 'space'", specifier = "==5.13.2" },
     { name = "numpy", specifier = ">=2.2.2" },
     { name = "torch", marker = "extra == 'inference'", specifier = ">=2.5.1" },
     { name = "torch", marker = "extra == 'space'", specifier = ">=2.5.1" },
