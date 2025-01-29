@@ -1,28 +1,30 @@
 from dataclasses import dataclass
 import math
-import torch
+import numpy as np
 
 @dataclass
 class Series:
-    raw: torch.Tensor
+    """A series of values for visualization with optional styling."""
+    raw: np.ndarray
     color: str = ""
     dasharray: str = ""
     label: str = ""
-    
+
     @property
-    def values(self) -> torch.Tensor:
-        """Normalized values ready for visualization"""
+    def values(self) -> np.ndarray:
+        """Normalized values ready for visualization."""
         return self.normalize(self.raw)
     
-    def normalize(self, x: torch.Tensor) -> torch.Tensor:
-        """Default implementation just passes through raw values"""
+    def normalize(self, x: np.ndarray) -> np.ndarray:
+        """Default implementation just passes through raw values."""
         return x
 
 
 @dataclass
 class EntropySeries(Series):
+    """A series that normalizes values relative to maximum possible entropy."""
     vocab_size: int = 256
     
-    def normalize(self, x: torch.Tensor) -> torch.Tensor:
+    def normalize(self, x: np.ndarray) -> np.ndarray:
         max_entropy = math.log(self.vocab_size)
         return x / max_entropy

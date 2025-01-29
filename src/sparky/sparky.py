@@ -3,13 +3,12 @@ import xml.etree.ElementTree as ET
 from .utils.dom import Element
 from .series import Series
 from .sparkline import Sparkline
-from .kde_plot import KDEPlot
 from .theming import svg_theme_toggle
 from .token_bb import TokenBB
 
 
 class Sparky:
-    def __init__(self, chars_per_line: int = 80, show_kde=False):
+    def __init__(self, chars_per_line: int = 80):
         self.chars_per_line = chars_per_line
         self.font_size = 14
         self.line_height = self.font_size
@@ -17,7 +16,6 @@ class Sparky:
         self.char_width = 8.4    # Width of each character in SVG units
         self.sparkline_height = 20
         self.margin = 10         # Margin around visualization
-        self.show_kde = show_kde
         
         # Register SVG namespace for proper rendering
         ET.register_namespace("", "http://www.w3.org/2000/svg")
@@ -145,20 +143,7 @@ class Sparky:
                 h=self.sparkline_height)
         
         # Add legend
-        legend_bottom = self._add_legend(svg, width - 90 - toggle_space, self.margin, series)
-
-        if self.show_kde:
-            # Add global KDE plot
-            kde = KDEPlot()
-            for i, s in enumerate(series):
-                kde.add_series(s.values, f'var(--col-series-{i+1})')
-            big_kde_height = 40
-            kde.render(
-                svg,
-                x=(width - 90 - toggle_space),
-                y=(legend_bottom + self.margin),
-                w=80, h=big_kde_height,
-            )
+        self._add_legend(svg, width - 90 - toggle_space, self.margin, series)
 
         # Add light/dark support
         svg_theme_toggle(

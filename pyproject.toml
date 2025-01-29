@@ -19,9 +19,6 @@ transformers = [
     "torch>=2.5.1",
     "transformers>=4.48.1",
 ]
-kde = [
-    "scipy>=1.15.1",
-]
 
 [build-system]
 requires = ["hatchling"]

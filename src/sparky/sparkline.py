@@ -1,24 +1,11 @@
-from math import isclose, isnan
-from typing import Optional, NamedTuple
+from math import isnan
+from typing import Optional
 import xml.etree.ElementTree as ET
-import torch
+import numpy as np
 
-from .utils.dom import Element, id_sequence
-from .utils.decompose import sliceable
 from .series import Series
-
-
-@sliceable  
-class TokenBB(NamedTuple):
-    # All positions relative to token start
-    width: float  # Total width of token
-    first_char: float  # Position of first char midpoint
-    mid: float    # Midpoint of token
-    last_char: float   # Position of last char midpoint
-
-    @property
-    def is_wide(self):
-        return not isclose(self.first_char, self.last_char, rel_tol=0.05)
+from .token_bb import TokenBB
+from .utils.dom import Element, id_sequence
 
 
 class Sparkline:
@@ -37,12 +24,12 @@ class Sparkline:
             '#a855f7',  # purple
         ]
 
-    def add_series(self, values: torch.Tensor, color: Optional[str] = None, dasharray=""):
+    def add_series(self, values: np.ndarray, color: Optional[str] = None, dasharray=""):
         """Add a new data series to the plot."""
         self.series.append(Series(values, color, dasharray=dasharray))
         return self
 
-    def _create_path_data(self, values: torch.Tensor, spans: list[TokenBB], window: tuple[int, int], h: float) -> str:
+    def _create_path_data(self, values: np.ndarray, spans: list[TokenBB], window: tuple[int, int], h: float) -> str:
         """Create SVG path data for values, breaking at NaN values."""
         start, end = window
 
@@ -86,7 +73,7 @@ class Sparkline:
             
         return ' '.join(points)
     
-    def _render_series(self, parent: ET.Element, values: torch.Tensor, spans: list[TokenBB], window: tuple[int, int], h: float, color: str, dasharray: str):
+    def _render_series(self, parent: ET.Element, values: np.ndarray, spans: list[TokenBB], window: tuple[int, int], h: float, color: str, dasharray: str):
         """Render a single sparkline series."""
         path_data = self._create_path_data(values, spans, window, h)
         return Element(parent, "path",
@@ -107,7 +94,6 @@ class Sparkline:
         w = sum(span.width for span in spans[start:end])
 
         clip = Element(parent, "clipPath", id=f"clip-{next(id_sequence)}")
-        # clip.set('id', f"clip-{next(ids)}")
         Element(clip, "rect", x=0, y=-h, width=w, height=h*2)
 
         # Render each series
@@ -131,7 +117,6 @@ class Sparkline:
             stroke="var(--col-baseline)",
             stroke_width=self.baseline_width,
             stroke_linecap="round",
-            # shape_rendering="crispEdges",
             style="mix-blend-mode: var(--blend-mode);",
         )
             
