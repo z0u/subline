@@ -54,7 +54,6 @@ For best results:
 - It should have a transparent background: `html_theme_toggle` will add a background to match the notebook environment. E.g. in Matplot, use ` plt.style.use('default')` and `fig.patch.set_alpha(0)`.
 """
 
-
 from xml.etree import ElementTree as et
 from typing import Optional, Union
 from textwrap import dedent
@@ -63,16 +62,17 @@ from dataclasses import dataclass, asdict
 
 def detect_notebook_env():
     """Detect what kind of notebook we're running in."""
-    import os, sys
+    import os
+    import sys
 
-    if 'google.colab' in sys.modules:
-        return 'colab'
-    elif 'KAGGLE_KERNEL_RUN_TYPE' in os.environ:
-        return 'kaggle'
-    elif 'PAPERSPACE_NOTEBOOK_REPO' in os.environ:
-        return 'paperspace'
+    if "google.colab" in sys.modules:
+        return "colab"
+    elif "KAGGLE_KERNEL_RUN_TYPE" in os.environ:
+        return "kaggle"
+    elif "PAPERSPACE_NOTEBOOK_REPO" in os.environ:
+        return "paperspace"
     else:
-        return 'other'
+        return "other"
 
 
 css_snippets = {
@@ -96,21 +96,19 @@ _default_theme = {
     "moon-color": "silver",
 }
 match detect_notebook_env():
-    case 'colab':
-        _default_theme |= { "bg-color": ("#f0f0f0", "#111") }
-    case 'kaggle':
-        _default_theme |= { "bg-color": ("#fff", "rgb(32, 33, 36)") }
-    case 'paperspace':
-        _default_theme |= { "bg-color": ("#f0f0f0", "#111") }
+    case "colab":
+        _default_theme |= {"bg-color": ("#f0f0f0", "#111")}
+    case "kaggle":
+        _default_theme |= {"bg-color": ("#fff", "rgb(32, 33, 36)")}
+    case "paperspace":
+        _default_theme |= {"bg-color": ("#f0f0f0", "#111")}
 
 _default_font = "Segoe UI Symbol, DejaVu Sans, Noto Sans, ui-sans-serif, system-ui"
 
+
 def create_theme(**theme_vars: dict[str, Union[str, tuple[str, str]]]):
     theme_vars = dict(_default_theme, **theme_vars)
-    return {
-        k: (v, v) if type(v) == str else v
-        for k, v in theme_vars.items()
-    }
+    return {k: (v, v) if isinstance(v, str) else v for k, v in theme_vars.items()}
 
 
 def svg_theme_toggle(
@@ -123,7 +121,7 @@ def svg_theme_toggle(
     moon_size: float = 16,
 ) -> et.Element:
     """Create a theme toggle switch with sun/moon icons in an SVG document.
-    
+
     Args:
         parent: Parent SVG element to attach to
         toggle_pos: (x,y) position for the toggle group
@@ -131,7 +129,7 @@ def svg_theme_toggle(
         base_font: Font stack for icons
         sun_size: Font size for sun icon in px
         moon_size: Font size for moon icon in px
-    
+
     Returns:
         The created toggle group element
     """
@@ -139,25 +137,27 @@ def svg_theme_toggle(
 
     # Add style element with our CSS rules
     style = et.SubElement(parent, "style")
-    
+
     # Build CSS rules
     css_rules = []
-    
+
     # Light theme default (when checkbox unchecked)
-    light_rules = [f"--{var}: {light_val};" for var, (light_val, _) in theme_vars.items()]
+    light_rules = [
+        f"--{var}: {light_val};" for var, (light_val, _) in theme_vars.items()
+    ]
     css_rules.append(f"""
         svg:not(:has(input[data-light-dark-toggle]:checked)) {{
-            {' '.join(light_rules)}
+            {" ".join(light_rules)}
             --sun-opacity: 1;
             --moon-opacity: 0;
         }}
     """)
-    
+
     # Dark theme when toggled (checkbox checked)
     dark_rules = [f"--{var}: {dark_val};" for var, (_, dark_val) in theme_vars.items()]
     css_rules.append(f"""
         svg:has(input[data-light-dark-toggle]:checked) {{
-            {' '.join(dark_rules)}
+            {" ".join(dark_rules)}
             --sun-opacity: 0;
             --moon-opacity: 1;
         }}
@@ -166,23 +166,23 @@ def svg_theme_toggle(
             filter: var(--content-filter);
         }}
     """)
-    
+
     # System preference - dark
     css_rules.append(f"""
         @media (prefers-color-scheme: dark) {{
             svg:not(:has(input[data-light-dark-toggle]:checked)) {{
-                {' '.join(dark_rules)}
+                {" ".join(dark_rules)}
                 --sun-opacity: 0;
                 --moon-opacity: 1;
             }}
             svg:has(input[data-light-dark-toggle]:checked) {{
-                {' '.join(light_rules)}
+                {" ".join(light_rules)}
                 --sun-opacity: 1;
                 --moon-opacity: 0;
             }}
         }}
     """)
-    
+
     # Shared styles for icons and transitions
     css_rules.append(f"""
         .icon {{
@@ -196,60 +196,79 @@ def svg_theme_toggle(
             transition: fill 0.3s, stroke 0.3s;
         }}
     """)
-    
-    style.text = '\n'.join(css_rules)
+
+    style.text = "\n".join(css_rules)
 
     # Create toggle group with proper ARIA attributes
     x, y = toggle_pos
-    toggle_group = et.SubElement(parent, "g", {
-        "transform": f"translate({x},{y})",
-        "role": "switch",
-        "aria-checked": "false",
-        "tabindex": "0",  # Make it focusable
-    })
-    
+    toggle_group = et.SubElement(
+        parent,
+        "g",
+        {
+            "transform": f"translate({x},{y})",
+            "role": "switch",
+            "aria-checked": "false",
+            "tabindex": "0",  # Make it focusable
+        },
+    )
+
     # Add sun icon
-    et.SubElement(toggle_group, "text", {
-        "class": "icon",
-        "x": "0",
-        "y": "0",
-        "font-size": f"{sun_size}px",
-        "fill": "var(--sun-color)",
-        "opacity": "var(--sun-opacity)",
-        "aria-hidden": "true",
-    }).text = "☀"
-    
+    et.SubElement(
+        toggle_group,
+        "text",
+        {
+            "class": "icon",
+            "x": "0",
+            "y": "0",
+            "font-size": f"{sun_size}px",
+            "fill": "var(--sun-color)",
+            "opacity": "var(--sun-opacity)",
+            "aria-hidden": "true",
+        },
+    ).text = "☀"
+
     # Add moon icon
-    et.SubElement(toggle_group, "text", {
-        "class": "icon",
-        "x": "0",
-        "y": "0",
-        "font-size": f"{moon_size}px",
-        "fill": "var(--moon-color)",
-        "opacity": "var(--moon-opacity)",
-        "role": "presentation",
-        "aria-hidden": "true",
-    }).text = "◑"
-    
+    et.SubElement(
+        toggle_group,
+        "text",
+        {
+            "class": "icon",
+            "x": "0",
+            "y": "0",
+            "font-size": f"{moon_size}px",
+            "fill": "var(--moon-color)",
+            "opacity": "var(--moon-opacity)",
+            "role": "presentation",
+            "aria-hidden": "true",
+        },
+    ).text = "◑"
+
     # Add invisible checkbox using foreignObject
-    fo = et.SubElement(toggle_group, "foreignObject", {
-        "x": "-10",  # Offset to center over icons
-        "y": "-10",
-        "width": "20",
-        "height": "20",
-    })
-    
+    fo = et.SubElement(
+        toggle_group,
+        "foreignObject",
+        {
+            "x": "-10",  # Offset to center over icons
+            "y": "-10",
+            "width": "20",
+            "height": "20",
+        },
+    )
+
     # Note: We have to set the XHTML namespace for the input element
-    input_el = et.Element("input", {
-        "xmlns": "http://www.w3.org/1999/xhtml",
-        "type": "checkbox",
-        "data-light-dark-toggle": "",
-        "title": "Toggle light/dark",
-        "aria-label": "Toggle between light and dark theme",
-        "style": "width: 20px; height: 20px; opacity: 0.001; cursor: pointer;",
-    })
+    input_el = et.Element(
+        "input",
+        {
+            "xmlns": "http://www.w3.org/1999/xhtml",
+            "type": "checkbox",
+            "data-light-dark-toggle": "",
+            "title": "Toggle light/dark",
+            "aria-label": "Toggle between light and dark theme",
+            "style": "width: 20px; height: 20px; opacity: 0.001; cursor: pointer;",
+        },
+    )
     fo.append(input_el)
-    
+
     return toggle_group
 
 
@@ -261,8 +280,8 @@ class Anchor:
     bottom: Optional[float] = None
 
     def __str__(self):
-        return ' '.join(
-            f'{prop}: {value};'
+        return " ".join(
+            f"{prop}: {value};"
             for prop, value in asdict(self).items()
             if value is not None
         )
@@ -270,23 +289,25 @@ class Anchor:
 
 def html_theme_toggle(
     html_content: str,
-    toggle_pos: Anchor, 
+    toggle_pos: Anchor,
     theme_vars: dict[str, tuple[str, str]],
     *,
-    icon_font=_default_font
+    icon_font=_default_font,
 ) -> str:
     """Wrap any SVG content with a theme toggle using HTML."""
     theme_vars = create_theme(**theme_vars)
-    light_rules = [f"--{var}: {light_val};" for var, (light_val, _) in theme_vars.items()]
+    light_rules = [
+        f"--{var}: {light_val};" for var, (light_val, _) in theme_vars.items()
+    ]
     dark_rules = [f"--{var}: {dark_val};" for var, (_, dark_val) in theme_vars.items()]
-    
+
     # Template our wrapper HTML
     return dedent(f"""
     <div class="theme-wrapper" style="position: relative;">
         <style>
             .theme-wrapper:not(:has(input[data-light-dark-toggle]:checked)) {{
                 /* Light theme (user's default) */
-                {' '.join(light_rules)}
+                {" ".join(light_rules)}
                 --sun-opacity: 1;
                 --moon-opacity: 0;
                 --content-filter: none;
@@ -294,7 +315,7 @@ def html_theme_toggle(
             
             .theme-wrapper:has(input[data-light-dark-toggle]:checked) {{
                 /* Dark theme (overridden) */
-                {' '.join(dark_rules)}
+                {" ".join(dark_rules)}
                 --sun-opacity: 0;
                 --moon-opacity: 1;
                 --content-filter: invert(1) hue-rotate(180deg);
@@ -303,14 +324,14 @@ def html_theme_toggle(
             @media (prefers-color-scheme: dark) {{
                 .theme-wrapper:not(:has(input[data-light-dark-toggle]:checked)) {{
                     /* Dark theme (user's default) */
-                    {' '.join(dark_rules)}
+                    {" ".join(dark_rules)}
                     --sun-opacity: 0;
                     --moon-opacity: 1;
                     --content-filter: invert(1) hue-rotate(180deg);
                 }}
                 .theme-wrapper:has(input[data-light-dark-toggle]:checked) {{
                     /* Light theme (overridden) */
-                    {' '.join(light_rules)}
+                    {" ".join(light_rules)}
                     --sun-opacity: 1;
                     --moon-opacity: 0;
                     --content-filter: none;
@@ -343,7 +364,7 @@ def html_theme_toggle(
             .theme-content {{
                 transition: 0.3s filter;
             }}
-            {css_snippets['sr-only']}
+            {css_snippets["sr-only"]}
         </style>
 
         <!-- Theme toggle -->
@@ -377,7 +398,7 @@ def fig_theme_toggle(fig, anchor=None, theme_vars=None, already_dark=False):
     from io import BytesIO
 
     img_io = BytesIO()
-    fig.savefig(img_io, format='png')
+    fig.savefig(img_io, format="png")
     png_str = base64.b64encode(img_io.getvalue()).decode()
 
     # If image is already dark, pre-invert
@@ -385,7 +406,7 @@ def fig_theme_toggle(fig, anchor=None, theme_vars=None, already_dark=False):
 
     themed_html = html_theme_toggle(
         f'<img {style} src="data:image/png;base64,{png_str}"/>',
-        toggle_pos=anchor or Anchor(top='10px', right='10px'),
+        toggle_pos=anchor or Anchor(top="10px", right="10px"),
         theme_vars=theme_vars or {},
     )
     return themed_html

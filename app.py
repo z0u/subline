@@ -1,6 +1,6 @@
 from sparky.inference import load_model, calc_token_metrics, visualize_batch
 
-model, tokenizer = load_model('gpt2')
+model, tokenizer = load_model("gpt2")
 
 texts = [
     "I am a language model.",

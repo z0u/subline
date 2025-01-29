@@ -15,7 +15,7 @@ dev = [
 ]
 
 [project.optional-dependencies]
-transformers = [
+inference = [
     "torch>=2.5.1",
     "transformers>=4.48.1",
 ]
