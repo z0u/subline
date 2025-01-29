@@ -14,12 +14,12 @@ def analyze_text(
 
     # Build list of metrics to show
     metrics_to_show = []
-    if s2:
-        metrics_to_show.append("s2")
-    if entropy:
-        metrics_to_show.append("entropy")
     if surprisal:
         metrics_to_show.append("surprisal")
+    if entropy:
+        metrics_to_show.append("entropy")
+    if s2:
+        metrics_to_show.append("s2")
 
     # Calculate metrics and generate visualization
     metrics = calc_token_metrics([text], model, tokenizer)
@@ -36,18 +36,18 @@ demo = gr.Interface(
             placeholder="Enter some text to analyze its information content...",
             lines=3,
         ),
-        gr.Checkbox(label="Show S₂ (surprise-surprise)", value=True),
-        gr.Checkbox(label="Show entropy"),
         gr.Checkbox(label="Show surprisal"),
+        gr.Checkbox(label="Show entropy"),
+        gr.Checkbox(label="Show S₂ (surprise-surprise)", value=True),
     ],
     outputs=gr.HTML(),
     title="Token Information Content Visualization",
     description="""
     Visualize how predictable each token is according to GPT-2. The metrics shown are:
     
-    - **S₂** (surprise-surprise): How much more/less surprising a token is than expected
-    - **Entropy**: Expected information content (uncertainty) at each position
     - **Surprisal**: Actual information content (-log probability) of each token
+    - **Entropy**: Expected information content (uncertainty) at each position
+    - **S₂** (surprise-surprise): How much more/less surprising a token is than expected
     """,
     examples=[
         ["The quick brown fox jumps over the lazy dog.", True, False, False],
