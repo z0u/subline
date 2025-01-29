@@ -65,7 +65,9 @@ def detect_notebook_env():
     import os
     import sys
 
-    if "google.colab" in sys.modules:
+    if "SPACE_ID" in os.environ:
+        return "huggingface"
+    elif "google.colab" in sys.modules:
         return "colab"
     elif "KAGGLE_KERNEL_RUN_TYPE" in os.environ:
         return "kaggle"
@@ -91,11 +93,13 @@ css_snippets = {
 
 
 _default_theme = {
-    "bg-color": ("#f0f0f0", "#2a2a2a"),
+    "bg-color": ("#fff", "#2a2a2a"),
     "sun-color": "goldenrod",
     "moon-color": "silver",
 }
 match detect_notebook_env():
+    case "huggingface":
+        _default_theme |= {"bg-color": ("white", "black")}
     case "colab":
         _default_theme |= {"bg-color": ("#f0f0f0", "#111")}
     case "kaggle":

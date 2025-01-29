@@ -1,0 +1,2 @@
+# For Hugging Face Spaces: install from pyproject.toml with additional requirements for running as an app.
+-e .[space]
