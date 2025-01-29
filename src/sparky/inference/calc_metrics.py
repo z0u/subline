@@ -1,18 +1,8 @@
 import torch
-from torch import Tensor
-import torch.nn.functional as F
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
-import torch
+from transformers import PreTrainedModel, PreTrainedTokenizer
 
 
-def load_model(name='gpt2'):
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = GPT2LMHeadModel.from_pretrained(name).to(device)
-    tokenizer = GPT2Tokenizer.from_pretrained(name, clean_up_tokenization_spaces=True)
-    return model, tokenizer
-
-
-def calc_token_metrics(texts: list[str], model: GPT2LMHeadModel, tokenizer: GPT2Tokenizer, truncation=False) -> dict:
+def calc_token_metrics(texts: list[str], model: PreTrainedModel, tokenizer: PreTrainedTokenizer, truncation=False) -> dict:
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 

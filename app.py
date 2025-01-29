@@ -1,6 +1,4 @@
-from .calc_metrics import calc_token_metrics, load_model
-from .visualize import visualize_batch
-from .sparky import Sparky
+from sparky.inference.visualize import visualize_batch
 
 model, tokenizer = load_model('gpt2')
 
