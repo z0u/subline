@@ -15,9 +15,16 @@ dev = [
 ]
 
 [project.optional-dependencies]
+# Core inference dependencies
 inference = [
     "torch>=2.5.1",
     "transformers>=4.48.1",
+]
+# Everything needed for the Hugging Face Space
+space = [
+    "torch>=2.5.1",
+    "transformers>=4.48.1",
+    "gradio>=4.13.0",
 ]
 
 [build-system]
