@@ -1,12 +1,12 @@
 import math
 
-from .decompose import select
-from .sparky import Sparky
+from ..utils.decompose import select
+from ..sparky import Sparky
+from ..series import Series
 
 
 def visualize_batch(metrics: dict) -> None:
     """Draw token-level metrics for each sequence in a batch: sparklines, KDE plots"""
-    import ml_utils as mu
     tokens, surprisals, entropies, vocab_size = select(metrics, 'tok_str, tok_surp, tok_ent, vocab_size')
     for seq, surp, ent in zip(tokens, surprisals, entropies):
         n = len(seq)
@@ -19,8 +19,8 @@ def visualize_batch(metrics: dict) -> None:
             # mu.EntropySeries(ent, vocab_size=vocab_size, label='Entropy'),
 
             # Surprise-surprise as two series, with negative values mirrored around the baseline
-            mu.Series((surp - ent)/math.log(vocab_size), label="S₂"),
-            mu.Series(-(surp - ent)/math.log(vocab_size), label="-S₂", dasharray='3'),
+            Series((surp - ent)/math.log(vocab_size), label="S₂"),
+            Series(-(surp - ent)/math.log(vocab_size), label="-S₂", dasharray='3'),
 
             # Earlier attempts at relative surprisal
             # mu.Series(surp / ent / 2, label='ERS'),

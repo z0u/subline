@@ -4,6 +4,9 @@ import numpy as np
 from scipy import stats
 import torch
 
+from .series import Series
+from .utils.dom import Element
+
 
 class KDEPlot:
     """A multi-series KDE plot handler."""

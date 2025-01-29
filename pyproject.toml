@@ -1,0 +1,28 @@
+[project]
+name = "sparky"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.2.2",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3.4",
+  "ruff>=0.9.3",
+]
+
+[project.optional-dependencies]
+transformers = [
+    "torch>=2.5.1",
+    "transformers>=4.48.1",
+]
+kde = [
+    "scipy>=1.15.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

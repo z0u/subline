@@ -1,3 +1,5 @@
+from sparky.utils.decompose import select, selecta, sliceable
+
 def test_sliceable():
     from collections import namedtuple
     Foo = sliceable(namedtuple('Foo', 'a,b,c,d'))

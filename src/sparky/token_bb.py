@@ -1,7 +1,7 @@
 from math import isclose
 from typing import NamedTuple
 
-from .sliceable import sliceable
+from .utils.decompose import sliceable
 
 
 @sliceable

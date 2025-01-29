@@ -1,13 +1,11 @@
-import math
-from math import isclose
-from typing import NamedTuple, Optional
-import torch
-from IPython.display import HTML, display
 import xml.etree.ElementTree as ET
-import numpy as np
-from scipy import stats
 
-from theming import svg_theme_toggle
+from .utils.dom import Element
+from .series import Series
+from .sparkline import Sparkline
+from .kde_plot import KDEPlot
+from .theming import svg_theme_toggle
+from .token_bb import TokenBB
 
 
 class Sparky:
@@ -165,7 +163,7 @@ class Sparky:
         # Add light/dark support
         svg_theme_toggle(
             svg,
-            toggle_pos=(width-20,20),
+            toggle_pos=(width-20, 20),
             theme_vars={
                 'col-series-1': ('#ef4444', '#ff7878'),
                 'col-series-2': '#3b82f6',
@@ -177,6 +175,4 @@ class Sparky:
                 'blend-mode': ('multiply', 'screen'),
             })
 
-        # Convert to string and display
-        svg_str = ET.tostring(svg, encoding='unicode')
-        display(HTML(svg_str))
+        return ET.tostring(svg, encoding='unicode')

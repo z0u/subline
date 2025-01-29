@@ -22,3 +22,6 @@ def gen_ids():
     seed = randbytes(4).hex()
     while True:
         yield f"{seed}-{next(counter):x}"
+
+
+id_sequence = gen_ids()

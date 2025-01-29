@@ -1,7 +1,8 @@
 import torch
 from torch import Tensor
 import torch.nn.functional as F
-from transformers import GPT2LMHeadModel, GPT2Tokenizerimport torch
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
+import torch
 
 
 def load_model(name='gpt2'):

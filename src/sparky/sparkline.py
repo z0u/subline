@@ -1,9 +1,12 @@
-from math import isclose
+from math import isclose, isnan
 from typing import Optional, NamedTuple
 import xml.etree.ElementTree as ET
-import numpy as np
-from scipy import stats
 import torch
+
+from .utils.dom import Element, id_sequence
+from .utils.decompose import sliceable
+from .series import Series
+
 
 @sliceable  
 class TokenBB(NamedTuple):
@@ -64,7 +67,7 @@ class Sparkline:
             knot1 = (x+first-cp_dx1, x+first)
             knot2 = (x+last-cp_dx2, x+last)
             
-            if math.isnan(v):
+            if isnan(v):
                 is_drawing = False
             else:
                 y = h - h * v
@@ -103,7 +106,7 @@ class Sparkline:
         start, end = window
         w = sum(span.width for span in spans[start:end])
 
-        clip = Element(parent, "clipPath", id=f"clip-{next(ids)}")
+        clip = Element(parent, "clipPath", id=f"clip-{next(id_sequence)}")
         # clip.set('id', f"clip-{next(ids)}")
         Element(clip, "rect", x=0, y=-h, width=w, height=h*2)
 
