@@ -1,7 +1,7 @@
 # Sparky — Token metrics visualization 📊
 
 ---
-title: Sparky — Token metrics visualization
+title: Sparky
 emoji: 📈
 colorFrom: blue
 colorTo: red
@@ -10,6 +10,8 @@ sdk_version: 4.13.0
 app_file: app.py
 pinned: false
 python_version: "3.12"
+license: mit
+short_description: Token metrics visualization
 ---
 
 Visualize how predictable each token is according to GPT-2, with beautiful sparklines that align with text. This tool helps you understand the information content of text at a token level, showing:
@@ -56,6 +58,12 @@ The app is deployed as a Hugging Face Space. To deploy your own instance:
 2. Create a new Space on Hugging Face
 3. Link the repository to your Space
 4. Push changes to deploy
+
+```bash
+huggingface-cli login
+git remote add space https://huggingface.co/spaces/your-username/sparky
+git push space main
+```
 
 
 ## Citation
