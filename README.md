@@ -43,8 +43,12 @@ Try these examples to see different aspects of the visualization:
 To run locally:
 
 ```bash
-pip install -e ".[space]"  # Install with Gradio UI dependencies
-python app.py
+uv venv
+# source .venv/bin/activate
+uv pip install -r requirements-dev.txt
+uv pip compile requirements-dev.txt -o uv.lock
+
+uv run app.py
 ```
 
 

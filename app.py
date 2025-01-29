@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent / "src"))
+
 import gradio as gr
 from sparky.inference import load_model, calc_token_metrics, visualize_batch
 
