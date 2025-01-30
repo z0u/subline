@@ -1,3 +1,4 @@
+from textwrap import dedent
 import xml.etree.ElementTree as ET
 
 from .utils.dom import Element
@@ -107,7 +108,6 @@ class Sparky:
         text_elem = Element(
             parent,
             "text",
-            font_family="Courier",
             font_size=self.font_size,
             y=baseline,
             text_anchor="middle",
@@ -145,7 +145,19 @@ class Sparky:
             xmlns="http://www.w3.org/2000/svg",
             style="background-color: var(--bg-color); box-shadow: 0 0 0 10px var(--bg-color);",
         )
-        Element(svg, "style", text="text { white-space: pre; }")
+        Element(
+            svg,
+            "style",
+            text=dedent("""
+                @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&family=Source+Code+Pro&display=swap');
+                text {
+                    font-family: "Source Code Pro", "Noto Sans Mono", monospace !important;
+                    font-optical-sizing: auto;
+                    font-weight: 400;
+                    white-space: pre;
+                }
+            """),
+        )
 
         # Add text content and sparklines
         sparkline = Sparkline()
