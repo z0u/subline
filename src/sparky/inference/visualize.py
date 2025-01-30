@@ -46,7 +46,7 @@ def create_series(
             s2 = (metrics.surprisal[index, :n] - metrics.entropy[index, :n]) / math.log(
                 metrics.vocab_size
             )
-            return [Series(s2, label=" S₂"), Series(-s2, label="-S₂", dasharray="3")]
+            return [Series(s2, label="+S₂"), Series(-s2, label="-S₂", dasharray="3")]
         case _:
             raise ValueError(f"Unknown metric: {metric}")
 

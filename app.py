@@ -87,9 +87,9 @@ width_slider = gr.Slider(
 )
 
 metric_toggles = [
-    gr.Checkbox(label="Surprisal", value=True),
-    gr.Checkbox(label="Entropy", value=True),
-    gr.Checkbox(label="S₂", value=False),
+    gr.Checkbox(label="Surprisal", value=False),
+    gr.Checkbox(label="Entropy", value=False),
+    gr.Checkbox(label="S₂", value=True),
 ]
 
 inputs = [text_input, width_slider, *metric_toggles]
