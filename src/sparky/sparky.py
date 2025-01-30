@@ -16,6 +16,8 @@ class Sparky:
         self.char_width = 8.4  # Width of each character in SVG units
         self.sparkline_height = 20
         self.margin = 10  # Margin around visualization
+        self.legend_height = self.line_height  # Height for legend area
+        self.toggle_width = 20  # Space for theme toggle
 
         # Register SVG namespace for proper rendering
         ET.register_namespace("", "http://www.w3.org/2000/svg")
@@ -43,29 +45,36 @@ class Sparky:
     def _add_legend(
         self, svg: ET.Element, x: float, y: float, series: list[Series]
     ) -> float:
-        """Add legend to the SVG."""
+        """Add a horizontal legend at the bottom of the SVG."""
         legend = Element(svg, "g", transform=f"translate({x}, {y})")
         font = dict(font_family="system-ui", font_size=10, fill="var(--col-text)")
-        line_height = 15
 
-        _y = y
+        # Layout items horizontally with spacing
+        item_spacing = 40
+        curr_x = 0
+
         for i, s in enumerate(series):
+            # Add line sample
             Element(
                 legend,
                 "line",
-                x1=0,
-                y1=_y,
-                x2=20,
-                y2=_y,
+                x1=curr_x,
+                y1=0,
+                x2=curr_x + 20,
+                y2=0,
                 stroke=f"var(--col-series-{i + 1})",
                 stroke_width=1,
                 stroke_dasharray=s.dasharray,
                 shape_rendering="crispEdges",
             )
-            Element(legend, "text", text=s.label, x=25, y=_y + 4, **font)
-            _y += line_height
+            # Add label
+            Element(legend, "text", text=s.label, x=curr_x + 25, y=4, **font)
 
-        return _y
+            # Move to next item position
+            curr_x += item_spacing + len(s.label) * 5
+
+        # Return total width used
+        return curr_x
 
     def _get_token_spans(self, tokens: list[str]) -> list[TokenBB]:
         """Calculate token bounding boxes in relative coordinates."""
@@ -116,59 +125,66 @@ class Sparky:
     def visualize(self, tokens: str | list[str], series: list[Series]) -> None:
         """Generate and display an SVG visualization of text metrics."""
         if isinstance(tokens, str):
-            # Assume character-level tokens
             tokens = list(tokens)
 
         # Split tokens into lines and calculate dimensions
         spans = self._get_token_spans(tokens)
         lines = self._wrap_tokens(spans)
-        text_width = self.chars_per_line * self.char_width
-        legend_space = 100
-        toggle_space = 20 + self.margin
-        width = text_width + 2 * self.margin + legend_space + toggle_space
+
+        # Calculate heights (these won't change)
         full_line_height = self.line_height + self.sparkline_height + self.line_gap
-        height = max(2, len(lines)) * full_line_height + 2 * self.margin
+        content_height = len(lines) * full_line_height
+        total_height = (
+            content_height + 2 * self.margin + self.line_gap + self.legend_height
+        )
 
-        sparkline = Sparkline()
-        for i, s in enumerate(series):
-            sparkline.add_series(
-                s.values, f"var(--col-series-{i + 1})", dasharray=s.dasharray
-            )
-
-        # Create SVG root
+        # Create SVG root without viewBox initially
         svg = Element(
             None,
             "svg",
             xmlns="http://www.w3.org/2000/svg",
-            viewBox=f"0 0 {width} {height}",
+            style="background-color: var(--bg-color); box-shadow: 0 0 0 10px var(--bg-color);",
         )
         Element(svg, "style", text="text { white-space: pre; }")
-        Element(svg, "rect", width=width, height=height, fill="var(--bg-color)")
 
-        # Process each line
+        # Add text content and sparklines
+        sparkline = Sparkline()
+        for i, s in enumerate(series):
+            sparkline.add_series(
+                s.values,
+                f"var(--col-series-{i + 1})",
+                dasharray=s.dasharray,
+            )
+
+        text_width = self.chars_per_line * self.char_width
         for i, (start, end) in enumerate(lines):
             y_offset = i * full_line_height + self.margin
             baseline = y_offset + self.font_size + 1
-
             self._add_text_line(svg, tokens, (start, end), self.margin, baseline)
-
-            # Add metric lines
             sparkline.render(
                 parent=svg,
                 spans=spans,
-                window=(start, end),  # The current line's range
+                window=(start, end),
                 x=self.margin,
                 y=baseline + 1,
                 h=self.sparkline_height,
             )
 
-        # Add legend
-        self._add_legend(svg, width - 90 - toggle_space, self.margin, series)
+        # Add legend and get its width
+        legend_y = content_height + self.line_gap + self.legend_height / 2
+        legend_width = self._add_legend(svg, self.margin, legend_y, series)
 
-        # Add light/dark support
+        # Calculate final width needed
+        min_width = text_width + 2 * self.margin
+        total_width = max(min_width, legend_width + self.toggle_width + 2 * self.margin)
+
+        # Add theme toggle using final width
         svg_theme_toggle(
             svg,
-            toggle_pos=(width - 20, 20),
+            toggle_pos=(
+                total_width - self.toggle_width / 2,
+                total_height - self.toggle_width / 2,
+            ),
             theme_vars={
                 "col-series-1": ("#ef4444", "#ff7878"),
                 "col-series-2": "#3b82f6",
@@ -180,5 +196,8 @@ class Sparky:
                 "blend-mode": ("multiply", "screen"),
             },
         )
+
+        # Set viewBox now that we know final dimensions
+        svg.set("viewBox", f"0 0 {total_width} {total_height}")
 
         return ET.tostring(svg, encoding="unicode")

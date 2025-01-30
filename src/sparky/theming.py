@@ -99,7 +99,12 @@ _default_theme = {
 }
 match detect_notebook_env():
     case "huggingface":
-        _default_theme |= {"bg-color": ("white", "black")}
+        _default_theme |= {
+            "bg-color": (
+                "var(--body-background-fill, white)",
+                "var(--body-background-fill, black)",
+            )
+        }
     case "colab":
         _default_theme |= {"bg-color": ("#f0f0f0", "#111")}
     case "kaggle":
@@ -198,6 +203,9 @@ def svg_theme_toggle(
         
         rect, circle, line, path {{
             transition: fill 0.3s, stroke 0.3s;
+        }}
+        svg {{
+            transition: all 0.3s
         }}
     """)
 

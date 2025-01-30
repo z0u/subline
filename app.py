@@ -82,7 +82,7 @@ width_slider = gr.Slider(
     label="line_width",
     minimum=20,
     maximum=120,
-    step=10,
+    step=5,
     value=30,
 )
 
@@ -109,7 +109,7 @@ demo = gr.Interface(
     fn=analyze_text,
     inputs=inputs,
     outputs=gr.HTML(),
-    title="Token Information Content Visualization",
+    title="Sparky: Token Information Content Visualization",
     description="""
     Visualize how predictable each token is according to GPT-2. The metrics shown are:
     
@@ -120,6 +120,7 @@ demo = gr.Interface(
     Read the paper for more details about this visualization and S₂: [Detecting out of distribution text with surprisal and entropy](https://www.lesswrong.com/posts/Kjo64rSWkFfc3sre5/detecting-out-of-distribution-text-with-surprisal-and#)
     """,
     examples=examples,
+    cache_examples=False,
 )
 
 if __name__ == "__main__":

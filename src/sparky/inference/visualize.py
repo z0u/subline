@@ -88,6 +88,7 @@ def visualize_batch(
 
         # Create sparkline visualization
         vis = Sparky(chars_per_line=line_width)
+        vis.margin = 0
         plot = vis.visualize(metrics.tokens[i], all_series)
         plots.append(plot)
 
