@@ -44,10 +44,7 @@ To run locally:
 
 ```bash
 uv venv
-# source .venv/bin/activate
 uv pip install -r requirements-dev.txt
-uv pip compile requirements-dev.txt -o uv.lock
-
 uv run app.py
 ```
 

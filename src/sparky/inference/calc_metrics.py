@@ -16,7 +16,6 @@ def calc_token_metrics(
     texts: List[str],
     model: PreTrainedModel,
     tokenizer: PreTrainedTokenizer,
-    truncation=False,
 ) -> TokenMetrics:
     """Calculate per-token metrics for a batch of text sequences using a language model."""
     if tokenizer.pad_token is None:
@@ -30,7 +29,7 @@ def calc_token_metrics(
         texts,
         return_tensors="pt",
         padding=True,
-        truncation=truncation,
+        truncation=True,
         return_length=True,
     ).to(device)
 
