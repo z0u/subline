@@ -14,6 +14,14 @@ from sparky.inference.visualize import MetricType
 model, tokenizer = load_model("gpt2")
 
 
+# Example inputs showing different linguistic patterns
+examples = [
+    ["A long time ago, in a galaxy somewhat far away..."],
+    ["In a shocking turn of table, the seemingly impossible task"],
+    ["The quick brown fox jumps over the lazy dog."],
+]
+
+
 def catch_all(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs) -> str:
@@ -75,7 +83,7 @@ text_input = gr.Textbox(
     label="text",
     placeholder="Enter some text to analyze...",
     lines=3,
-    value="The quick brown fox jumps over the lazy dog.",
+    value=examples[0][0],
 )
 
 width_slider = gr.Slider(
@@ -94,13 +102,6 @@ metric_toggles = [
 
 inputs = [text_input, width_slider, *metric_toggles]
 
-# Example inputs showing different linguistic patterns
-examples = [
-    ["The quick brown fox jumps over the lazy dog."],
-    ["In a shocking turn of events, the seemingly impossible task"],
-    ["In a shocking turn of table, the seemingly impossible task"],
-    ["A long time ago, in a galaxy far, far away..."],
-]
 empty_sample = [None] * len(inputs)
 examples = [sample + empty_sample[len(sample) :] for sample in examples]
 
