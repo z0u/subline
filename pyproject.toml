@@ -51,7 +51,7 @@ build-backend = "hatchling.build"
 packages = ["src/subline"]
 
 [tool.ruff]
-line-length = 88
+line-length = 120
 target-version = "py310"
 src = ["src"]
 

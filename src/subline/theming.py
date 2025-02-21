@@ -1,12 +1,14 @@
 """
 Dynamic theming support for notebooks
 
-This is a collection of utilities for making figures display nicely in notebooks. They adapt to the user's light/dark mode preference automatically, and have a button to override the current setting.
+This is a collection of utilities for making figures display nicely in
+notebooks. They adapt to the user's light/dark mode preference
+automatically, and have a button to override the current setting.
 
 
 ## SVG light/dark theming
 
-Suppose we have an SVG [etree](https://docs.python.org/3/library/xml.etree.elementtree.html) with a structure like this:
+Suppose we have an SVG [etree] with a structure like this:
 
 ```xml
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100">
@@ -14,6 +16,8 @@ Suppose we have an SVG [etree](https://docs.python.org/3/library/xml.etree.eleme
   <text x="40" y="40" fill="var(--text-color)">Theme toggle!</text>
 </svg>
 ```
+
+[etree]: https://docs.python.org/3/library/xml.etree.elementtree.html
 
 Let's add dynamic theme support, based on those CSS variables!
 
@@ -31,7 +35,8 @@ display(HTML(et.tostring(svg, encoding='unicode')))
 
 ## HTML light/dark theming
 
-Suppose we have some HTML — maybe it contains a figure as PNG, or an SVG with a structure that we don't control.
+Suppose we have some HTML — maybe it contains a figure as PNG, or an SVG with
+a structure that we don't control.
 
 ```python
 img_io = BytesIO()
@@ -51,13 +56,15 @@ display(HTML(themed_html))
 
 For best results:
 - The un-themed source should be in light mode
-- It should have a transparent background: `html_theme_toggle` will add a background to match the notebook environment. E.g. in Matplot, use ` plt.style.use('default')` and `fig.patch.set_alpha(0)`.
+- It should have a transparent background: `html_theme_toggle` will add a
+  background to match the notebook environment. E.g. in Matplot, use
+  `plt.style.use('default')` and `fig.patch.set_alpha(0)`.
 """
 
-from xml.etree import ElementTree as et
-from typing import Optional, Union
+from dataclasses import asdict, dataclass
 from textwrap import dedent
-from dataclasses import dataclass, asdict
+from typing import Optional, Union
+from xml.etree import ElementTree as et
 
 
 def detect_notebook_env():
@@ -146,9 +153,7 @@ def svg_theme_toggle(
     css_rules = []
 
     # Light theme default (when checkbox unchecked)
-    light_rules = [
-        f"--{var}: {light_val};" for var, (light_val, _) in theme_vars.items()
-    ]
+    light_rules = [f"--{var}: {light_val};" for var, (light_val, _) in theme_vars.items()]
     css_rules.append(f"""
         svg:not(:has(input[data-light-dark-toggle]:checked)) {{
             {" ".join(light_rules)}
@@ -287,11 +292,7 @@ class Anchor:
     bottom: Optional[float] = None
 
     def __str__(self):
-        return " ".join(
-            f"{prop}: {value};"
-            for prop, value in asdict(self).items()
-            if value is not None
-        )
+        return " ".join(f"{prop}: {value};" for prop, value in asdict(self).items() if value is not None)
 
 
 def html_theme_toggle(
@@ -303,9 +304,7 @@ def html_theme_toggle(
 ) -> str:
     """Wrap any SVG content with a theme toggle using HTML."""
     theme_vars = create_theme(**theme_vars)
-    light_rules = [
-        f"--{var}: {light_val};" for var, (light_val, _) in theme_vars.items()
-    ]
+    light_rules = [f"--{var}: {light_val};" for var, (light_val, _) in theme_vars.items()]
     dark_rules = [f"--{var}: {dark_val};" for var, (_, dark_val) in theme_vars.items()]
 
     # Template our wrapper HTML

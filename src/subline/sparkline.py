@@ -1,6 +1,7 @@
+import xml.etree.ElementTree as ET
 from math import isnan
 from typing import Optional
-import xml.etree.ElementTree as ET
+
 import numpy as np
 
 from .series import Series
@@ -53,7 +54,7 @@ class Sparkline:
         points = []
         is_drawing = False
 
-        for i, (span, v) in enumerate(zip(peek_spans, peek_values.tolist())):
+        for span, v in zip(peek_spans, peek_values.tolist(), strict=True):
             first, last, width = span["first_char last_char width"]
             cp_dx1 = first
             cp_dx2 = width - last
@@ -126,9 +127,7 @@ class Sparkline:
         palette = iter(self.palette)
         for series in self.series:
             color = series.color or next(palette)
-            path = self._render_series(
-                parent, series.values, spans, window, h, color, series.dasharray
-            )
+            path = self._render_series(parent, series.values, spans, window, h, color, series.dasharray)
             path.set("clip-path", f"url(#{clip.get('id')})")
 
         # Render token baseline, so it's clear where each one starts and ends
@@ -143,8 +142,7 @@ class Sparkline:
             parent,
             "path",
             d=" ".join(
-                f"M{first_char - dx:.1f},{h:.1f} L{last_char + dx:.1f},{h:.1f}"
-                for first_char, last_char in segments
+                f"M{first_char - dx:.1f},{h:.1f} L{last_char + dx:.1f},{h:.1f}" for first_char, last_char in segments
             ),
             fill="none",
             stroke="var(--col-baseline)",

@@ -1,11 +1,11 @@
-from textwrap import dedent
 import xml.etree.ElementTree as ET
+from textwrap import dedent
 
-from .utils.dom import Element
 from .series import Series
 from .sparkline import Sparkline
 from .theming import svg_theme_toggle
 from .token_bb import TokenBB
+from .utils.dom import Element
 
 
 class Subline:
@@ -43,9 +43,7 @@ class Subline:
 
         return lines
 
-    def _add_legend(
-        self, svg: ET.Element, x: float, y: float, series: list[Series]
-    ) -> float:
+    def _add_legend(self, svg: ET.Element, x: float, y: float, series: list[Series]) -> float:
         """Add a horizontal legend at the bottom of the SVG."""
         legend = Element(svg, "g", transform=f"translate({x}, {y})")
         font = dict(font_family="system-ui", font_size=10, fill="var(--col-text)")
@@ -134,9 +132,7 @@ class Subline:
         # Calculate heights (these won't change)
         full_line_height = self.line_height + self.sparkline_height + self.line_gap
         content_height = len(lines) * full_line_height
-        total_height = (
-            content_height + 2 * self.margin + self.line_gap + self.legend_height
-        )
+        total_height = content_height + 2 * self.margin + self.line_gap + self.legend_height
 
         # Create SVG root without viewBox initially
         svg = Element(

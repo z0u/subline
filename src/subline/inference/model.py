@@ -1,7 +1,6 @@
 import time
 
 import torch
-import transformers
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
 

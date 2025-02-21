@@ -1,4 +1,4 @@
-from typing import Protocol, TypeVar, Union, runtime_checkable, NamedTuple
+from typing import NamedTuple, Protocol, TypeVar, Union, runtime_checkable
 
 
 def sliceable(cls: NamedTuple):

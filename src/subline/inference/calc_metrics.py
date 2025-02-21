@@ -66,7 +66,7 @@ def calc_token_metrics(
     # Get readable tokens
     tokens = [
         clean_tokens_for_display(seq[:length], tokenizer)
-        for seq, length in zip(inputs.input_ids, inputs.length)
+        for seq, length in zip(inputs.input_ids, inputs.length, strict=True)
     ]
 
     return TokenMetrics(

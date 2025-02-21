@@ -1,18 +1,15 @@
 import math
-from typing import List, Literal
+from typing import Iterable, List, Literal
 
+from ..series import EntropySeries, Series
 from ..subline import Subline
-from ..series import Series, EntropySeries
 from .types import TokenMetrics
-
 
 # Available metrics to visualize
 MetricType = Literal["surprisal", "entropy", "s2"]
 
 
-def create_series(
-    metrics: TokenMetrics, metric: MetricType, index: int
-) -> List[Series]:
+def create_series(metrics: TokenMetrics, metric: MetricType, index: int) -> List[Series]:
     """Create visualization series for the specified metric.
 
     Args:
@@ -43,9 +40,7 @@ def create_series(
             ]
         case "s2":
             # Return both positive and negative series for S2
-            s2 = (metrics.surprisal[index, :n] - metrics.entropy[index, :n]) / math.log(
-                metrics.vocab_size
-            )
+            s2 = (metrics.surprisal[index, :n] - metrics.entropy[index, :n]) / math.log(metrics.vocab_size)
             return [Series(s2, label="+S₂"), Series(-s2, label="-S₂", dasharray="3")]
         case _:
             raise ValueError(f"Unknown metric: {metric}")
@@ -54,7 +49,7 @@ def create_series(
 def visualize_batch(
     metrics: TokenMetrics,
     line_width: int = 80,
-    metrics_to_show: List[MetricType] = ["s2"],
+    metrics_to_show: Iterable[MetricType] = ("s2",),
 ) -> List[str]:
     """Draw token-level metrics for each sequence in a batch.
 

@@ -3,19 +3,10 @@ from itertools import count
 from random import randbytes
 
 
-def Element(
-    parent: ET.Element | None, tag: str, text: str | None = None, **attrs
-) -> ET.Element:
+def Element(parent: ET.Element | None, tag: str, text: str | None = None, **attrs) -> ET.Element:
     """Create an XML element with case-preserved attributes and optional text content."""
-    attrs = {
-        k.replace("_", "-"): format_float(v) if isinstance(v, float) else str(v)
-        for k, v in attrs.items()
-    }
-    elem = (
-        ET.SubElement(parent, tag, attrs)
-        if parent is not None
-        else ET.Element(tag, attrs)
-    )
+    attrs = {k.replace("_", "-"): format_float(v) if isinstance(v, float) else str(v) for k, v in attrs.items()}
+    elem = ET.SubElement(parent, tag, attrs) if parent is not None else ET.Element(tag, attrs)
     if text is not None:
         elem.text = text
     return elem

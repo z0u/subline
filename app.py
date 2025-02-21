@@ -1,15 +1,14 @@
 import sys
-from pathlib import Path
 from functools import lru_cache, wraps
+from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent / "src"))
 
-from pydantic import validate_call, Field, ValidationError
 import gradio as gr
+from pydantic import Field, ValidationError, validate_call
 
-from subline.inference import load_model, calc_token_metrics, visualize_batch
+from subline.inference import calc_token_metrics, load_model, visualize_batch
 from subline.inference.visualize import MetricType
-
 
 model, tokenizer = load_model("gpt2")
 
@@ -51,9 +50,7 @@ def _analyze_text(
     metrics_to_show: tuple[MetricType, ...] = Field(..., min_length=1),
 ) -> str:
     metrics = calc_token_metrics([text], model, tokenizer)
-    svgs = visualize_batch(
-        metrics, metrics_to_show=metrics_to_show, line_width=line_width
-    )
+    svgs = visualize_batch(metrics, metrics_to_show=metrics_to_show, line_width=line_width)
     return svgs[0]
 
 
@@ -73,9 +70,7 @@ def analyze_text(
     if s2:
         metrics_to_show += ("s2",)
 
-    return _analyze_text(
-        text=text, line_width=line_width, metrics_to_show=metrics_to_show
-    )
+    return _analyze_text(text=text, line_width=line_width, metrics_to_show=metrics_to_show)
 
 
 # Define UI components
@@ -118,7 +113,10 @@ demo = gr.Interface(
     - **Entropy**: Expected information content (uncertainty) at each position
     - **S₂** (surprise-surprise): How much more/less surprising a token is than expected (surprisal - entropy)
 
-    Read the paper for more details about this visualization and S₂: [Detecting out of distribution text with surprisal and entropy](https://www.lesswrong.com/posts/Kjo64rSWkFfc3sre5/detecting-out-of-distribution-text-with-surprisal-and#)
+    Read the paper for more details about this visualization and S₂:
+    [Detecting out of distribution text with surprisal and entropy][s2]
+
+    [s2]: https://www.lesswrong.com/posts/Kjo64rSWkFfc3sre5/detecting-out-of-distribution-text-with-surprisal-and
     """,
     examples=examples,
     cache_examples=False,
