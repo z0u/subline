@@ -8,7 +8,7 @@ from .theming import svg_theme_toggle
 from .token_bb import TokenBB
 
 
-class Sparky:
+class Subline:
     def __init__(self, chars_per_line: int = 80):
         self.chars_per_line = chars_per_line
         self.font_size = 14

@@ -1,4 +1,4 @@
-from sparky.utils.decompose import select, selecta, sliceable
+from subline.utils.decompose import select, selecta, sliceable
 
 
 def test_sliceable():

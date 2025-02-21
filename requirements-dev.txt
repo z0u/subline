@@ -1,5 +1,0 @@
--r requirements.txt
-pytest~=8.3.4
-ruff~=0.9.3
-# This is a hard dependency, but it's provided by HF.
-gradio~=5.13.2

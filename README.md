@@ -1,5 +1,5 @@
 ---
-title: Sparky
+title: Subline
 emoji: 📈
 colorFrom: blue
 colorTo: red
@@ -60,7 +60,7 @@ The app is deployed as a Hugging Face Space. To deploy your own instance:
 
 ```bash
 huggingface-cli login
-git remote add space https://huggingface.co/spaces/your-username/sparky
+git remote add space https://huggingface.co/spaces/your-username/subline
 git push space main
 ```
 
@@ -72,9 +72,9 @@ If you use this visualization in your research, please cite:
 ```bibtex
 @software{text_metrics_viz,
   author = {Sandy Fraser},
-  title = {Sparky: A Text Metrics Visualizer},
+  title = {Subline: A Text Metrics Visualizer},
   year = {2025},
-  url = {https://github.com/z0u/sparky}
+  url = {https://github.com/z0u/subline}
 }
 ```
 

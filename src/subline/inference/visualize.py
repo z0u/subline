@@ -1,7 +1,7 @@
 import math
 from typing import List, Literal
 
-from ..sparky import Sparky
+from ..subline import Subline
 from ..series import Series, EntropySeries
 from .types import TokenMetrics
 
@@ -87,7 +87,7 @@ def visualize_batch(
             all_series.extend(create_series(metrics, metric, i))
 
         # Create sparkline visualization
-        vis = Sparky(chars_per_line=line_width)
+        vis = Subline(chars_per_line=line_width)
         vis.margin = 0
         plot = vis.visualize(metrics.tokens[i], all_series)
         plots.append(plot)

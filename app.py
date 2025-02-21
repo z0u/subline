@@ -7,8 +7,8 @@ sys.path.append(str(Path(__file__).parent / "src"))
 from pydantic import validate_call, Field, ValidationError
 import gradio as gr
 
-from sparky.inference import load_model, calc_token_metrics, visualize_batch
-from sparky.inference.visualize import MetricType
+from subline.inference import load_model, calc_token_metrics, visualize_batch
+from subline.inference.visualize import MetricType
 
 
 model, tokenizer = load_model("gpt2")
@@ -110,7 +110,7 @@ demo = gr.Interface(
     fn=analyze_text,
     inputs=inputs,
     outputs=gr.HTML(),
-    title="Sparky: Token Information Content Visualization",
+    title="Subline: Token Information Content Visualization",
     description="""
     Visualize how predictable each token is according to GPT-2. The metrics shown are:
     
