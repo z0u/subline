@@ -1,17 +1,3 @@
----
-title: Subline
-emoji: 📈
-colorFrom: blue
-colorTo: red
-sdk: gradio
-sdk_version: 5.13.2
-app_file: app.py
-pinned: false
-python_version: "3.12"
-license: mit
-short_description: Token metrics visualization
----
-
 Visualize how predictable each token is according to GPT-2, with beautiful sparklines that align with text. This tool helps you understand the information content of text at a token level, showing:
 
 - **Surprisal**: How much information each token contains (-log probability)
@@ -34,7 +20,7 @@ Try these examples to see different aspects of the visualization:
 
 2. Compare these two sentences:
    - "In a shocking turn of events, the seemingly impossible task"
-   - "In a shocking turn of table, the seemingly impossible task"
+   - "In a shocking turn of **table**, the seemingly impossible task"
    - Watch how S₂ spikes on the unexpected word!
 
 
@@ -44,7 +30,7 @@ To run locally:
 
 ```bash
 uv venv
-uv pip install -r requirements-dev.txt
+uv sync --all-extras
 uv run app.py
 ```
 

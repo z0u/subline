@@ -1,0 +1,64 @@
+[project]
+name = "subline"
+version = "0.1.0"
+description = "Generate sparkline visualizations that track under text"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Sandy Fraser", email = "alex.d.fraser@gmail.com" }
+]
+keywords = ["visualization", "text", "sparklines", "svg", "nlp"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License", 
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Text Processing",
+]
+dependencies = [
+    "numpy>=2.0.0"
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "ruff>=0.9.0",
+]
+
+[project.optional-dependencies]
+inference = [
+    "torch>=2.5.1",
+    "transformers>=4.48.1",
+]
+# Everything needed for the Hugging Face Space
+space = [
+    "torch>=2.5.1",
+    "transformers>=4.48.1",
+    "gradio==5.13.2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/subline"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # bugbear
+]
