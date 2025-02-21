@@ -1,4 +1,4 @@
-from typing import NamedTuple, Protocol, TypeVar, Union, runtime_checkable
+from typing import NamedTuple
 
 
 def sliceable(cls: NamedTuple):
@@ -22,30 +22,3 @@ def sliceable(cls: NamedTuple):
 
     cls.__getitem__ = __getitem__
     return cls
-
-
-T = TypeVar("T")
-
-
-@runtime_checkable
-class Gettable(Protocol):
-    def get(self, key: str, default: T | None = None) -> T | None: ...
-
-
-def select(obj: Gettable, keys: Union[str, list[str]]) -> tuple[T, ...]:
-    """Extract multiple values from a gettable object using a list of keys.
-
-    >>> config = {"database.host": "localhost", "database.port": 5432}
-    >>> select(config, "database.host,database.port")
-    ('localhost', 5432)
-    """
-    if isinstance(keys, str):
-        keys = keys.replace(", ", ",").replace(" ", ",").split(",")
-    return tuple(obj.get(k) for k in keys)
-
-
-def selecta(obj, keys: Union[str, list[str]]) -> tuple[...]:
-    """Extract multiple fields from an object using a list of attribute names."""
-    if isinstance(keys, str):
-        keys = keys.replace(", ", ",").replace(" ", ",").split(",")
-    return tuple(getattr(obj, k, None) for k in keys)
